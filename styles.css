@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #000;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+nav a {
+    margin-left: 20px;
+    color: white;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+nav a:hover {
+    opacity: 1;
+}
+
+.hero {
+    text-align: center;
+    padding: 120px 20px;
+    background: linear-gradient(135deg, #222, #000);
+}
+
+.hero h1 {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #4f8cff;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.button:hover {
+    background: #1b6bff;
+}
+
+.section {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.dark {
+    background: #1b1b1b;
+}
+
+.steps {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.step {
+    width: 230px;
+    margin: 20px;
+    background: #222;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.pricing-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.price-card {
+    width: 260px;
+    margin: 20px;
+    background: #222;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #333;
+}
+
+.price-card.popular {
+    border: 2px solid #4f8cff;
+    box-shadow: 0 0 15px #4f8cff66;
+}
+
+.price {
+    font-size: 40px;
+    margin: 10px 0;
+}
+
+footer {
+    padding: 20px;
+    text-align: center;
+    background: #000;
+}
