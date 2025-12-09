@@ -122,7 +122,7 @@
 </footer>
 
 <script>
-const API_BASE = "https://peoplemade-git-master-aleks-knaps-projects.vercel.app/api/hash.js";
+const API_BASE = "https://peoplemade-git-master-aleks-knaps-projects.vercel.app/peoplemade/api/hash";
 
 // Compute SHA-256 hash
 async function getFileHash(file) {
@@ -157,7 +157,7 @@ async function startVerification() {
     const hash = await getFileHash(artFile);
 
     // Check if hash already exists
-    let checkRes = await fetch(API_BASE + "/hash/check", {
+    let checkRes = await fetch(API_BASE + "/check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ hash })
@@ -189,7 +189,7 @@ async function startVerification() {
     status.innerHTML += `<br>✅ Verification Complete!<br>Your Certificate ID:<br><b>${certID}</b>`;
 
     // Save hash + certificateID
-    await fetch(API_BASE + "/hash/store", {
+    await fetch(API_BASE + "/store", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ hash, certificateID: certID })
