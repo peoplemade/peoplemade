@@ -35,6 +35,7 @@
         provide trusted certificates for collectors, galleries, and artists.
     </p>
 </section>
+
 <!-- UPLOAD SECTION -->
 <section id="upload" class="section">
     <h2>Upload Artwork for Certification</h2>
@@ -50,7 +51,6 @@
         <button class="button" onclick="startVerification()">Submit for Verification</button>
 
         <div id="preview" class="preview"></div>
-
         <div id="status"></div>
     </div>
 </section>
@@ -58,29 +58,11 @@
 <!-- PROCESS SECTION -->
 <section id="process" class="section dark">
     <h2>How Certification Works</h2>
-
     <div class="steps">
-        <div class="step">
-            <h3>1. Upload Your Artwork</h3>
-            <p>Submit the finished piece and optional time-lapse, PSD files, or sketches.</p>
-        </div>
-
-        <div class="step">
-            <h3>2. Verification & AI Screening</h3>
-            <p>We analyze metadata, layer data, and run AI-detection tools.</p>
-        </div>
-
-        <div class="step">
-            <h3>3. Human Review</h3>
-            <p>Our reviewers check creation evidence and confirm authenticity.</p>
-        </div>
-
-        <div class="step">
-            <h3>4. Receive Your Certificate</h3>
-            <p>
-                Get a tamper-proof certificate with a unique ID and verification link.
-            </p>
-        </div>
+        <div class="step"><h3>1. Upload Your Artwork</h3><p>Submit the finished piece and optional time-lapse, PSD files, or sketches.</p></div>
+        <div class="step"><h3>2. Verification & AI Screening</h3><p>We analyze metadata, layer data, and run AI-detection tools.</p></div>
+        <div class="step"><h3>3. Human Review</h3><p>Our reviewers check creation evidence and confirm authenticity.</p></div>
+        <div class="step"><h3>4. Receive Your Certificate</h3><p>Get a tamper-proof certificate with a unique ID and verification link.</p></div>
     </div>
 </section>
 
@@ -138,8 +120,21 @@
 <footer>
     <p>© 2025 PMAC — PeopleMade Art Certification</p>
 </footer>
+
 <script>
-function startVerification() {
+const API_BASE = "https://your-backend-url.com";
+
+// Compute SHA-256 hash
+async function getFileHash(file) {
+    const buffer = await file.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+    return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+// Main verification function
+async function startVerification() {
     const artFile = document.getElementById("artFile").files[0];
     const proofFiles = document.getElementById("proofFiles").files;
     const status = document.getElementById("status");
@@ -148,20 +143,33 @@ function startVerification() {
     status.innerHTML = "";
     preview.innerHTML = "";
 
-    // Check if user uploaded artwork
     if (!artFile) {
         status.innerHTML = "❌ Please upload your artwork file.";
         return;
     }
 
-    // Preview the uploaded image
+    // Preview image
     const reader = new FileReader();
-    reader.onload = function (e) {
-        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-    };
+    reader.onload = e => preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
     reader.readAsDataURL(artFile);
 
-    // Simulated verification steps
+    // Compute file hash
+    const hash = await getFileHash(artFile);
+
+    // Check if hash already exists
+    let checkRes = await fetch(API_BASE + "/hash/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hash })
+    });
+    let checkData = await checkRes.json();
+
+    if (checkData.exists) {
+        status.innerHTML = `⚠️ This artwork is already certified.<br>Certificate ID: <b>${checkData.certificateID}</b>`;
+        return;
+    }
+
+    // Fake verification steps (visual)
     let steps = [
         "Uploading artwork...",
         "Checking metadata...",
@@ -171,22 +179,21 @@ function startVerification() {
         "Finalizing certificate..."
     ];
 
-    let delay = 800;
-    let i = 0;
-
-    function runStep() {
-        if (i < steps.length) {
-            status.innerHTML += steps[i] + "\n";
-            i++;
-            setTimeout(runStep, delay);
-        } else {
-            // Generate fake certificate ID for demo
-            let certID = "PMAC-" + Math.random().toString(36).substring(2, 10).toUpperCase();
-            status.innerHTML += `\n✅ Verification Complete!\nYour Certificate ID:\n${certID}`;
-        }
+    for (let step of steps) {
+        status.innerHTML += step + "<br>";
+        await new Promise(r => setTimeout(r, 700));
     }
 
-    runStep();
+    // Generate certificate ID
+    const certID = "PMAC-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+    status.innerHTML += `<br>✅ Verification Complete!<br>Your Certificate ID:<br><b>${certID}</b>`;
+
+    // Save hash + certificateID
+    await fetch(API_BASE + "/hash/store", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hash, certificateID: certID })
+    });
 }
 </script>
 
