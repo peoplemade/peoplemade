@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import Hash from "./models/Hash.js";
+import Hash from "./Hash.js";
 
 dotenv.config();
 
