@@ -1,0 +1,21 @@
+<html lang="en">
+    <link rel="stylesheet" href="styles.css">
+<!-- UPLOAD SECTION -->
+<section id="upload" class="section">
+    <h2>Upload Artwork for Certification</h2>
+    <p>Select your artwork and any optional proof files.</p>
+
+    <div class="upload-box">
+        <label class="upload-label">Artwork File</label>
+        <input type="file" id="artFile" accept="image/*" />
+
+        <label class="upload-label">Optional Proof (PSD, Timelapse, Sketches)</label>
+        <input type="file" id="proofFiles" multiple />
+
+        <button class="button" onclick="startVerification()">Submit for Verification</button>
+
+        <div id="preview" class="preview"></div>
+        <div id="status"></div>
+    </div>
+</section>
+</html>
